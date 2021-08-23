@@ -1,1 +1,2 @@
-# TesT
+# 運用ルール
+## GitHub-Flowについて
