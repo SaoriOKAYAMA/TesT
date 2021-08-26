@@ -1,0 +1,156 @@
+<div class="field-items"><div class="field-item even" property="content:encoded"><p><img alt="" class="img-responsive" src="/.assets/sr-wp-cover.png" style="border-width: 1px; border-style: solid;"></p>
+    <p>この記事では共用型サーバーACE01に標準装備されているSmartReleaseを使い、テスト環境で構築したWordPressのリリースと運用方法についてご紹介いたします。<br>
+    ACE01を借りたけどSmartReleaseの使い方がよく分からないと言う方は参考にしてみてください。</p>
+    <p>&nbsp;</p>
+    <h2>目次</h2>
+    <ul>
+    <li><a href="#about"><span>SmartReleaseとは</span></a></li>
+    <li><a href="#stg"><span>テスト環境にWordPressをインストール</span></a></li>
+    <li><a href="#prod"><span>公開環境にWordPressをインストール</span></a></li>
+    <li><a href="#wp-config"><span>設定ファイル（wp-config.php）の調整</span></a></li>
+    <li><a href="#release"><span>WordPressを公開環境へ移行</span></a></li>
+    <li><a href="#use"><span>サイト運用が始まったら</span></a></li>
+    <li><a href="#comment"><span>まとめ</span></a></li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2><a id="about" name="about"></a>SmartReleaseとは</h2>
+    <p>SmartReleaseとは、CPIのACE01を借りると標準で使えるウェブ制作をラクにするサーバーツールです。</p>
+    <h3>SmartReleaseの特徴</h3>
+    <ul>
+    <li><span>テスト環境標準装備</span></li>
+    <li><span>テストから公開にファイル転送機能</span></li>
+    <li><span>自動バックアップ機能（ウェブ、データベース）</span></li>
+    </ul>
+    <p>&nbsp;</p>
+    <h2>SmartReleaseの利点</h2>
+    <p>ACE01は下記のサーバー構成で、SmartReleaseと呼んでいるのはテスト環境から、公開環境にファイル転送をしたり、バックアップからデータを戻したりするための機能のことです。</p>
+    <p>それではSmartReleaseの利点について詳しく見ていきます。</p>
+    <p><img alt="" class="img-responsive" src="/.assets/ace01-server.png" style="border-width: 1px; border-style: solid;"></p>
+    <h3>テスト環境標準装備</h3>
+    <p>一度ウェブサイトが本番稼働すると、公開環境下で追加開発や、システムアップデートテストなどをすることが難しくなります。<br>
+    追加改修などの場合は、テスト環境を用意して作業を行い本番に反映します。<br>
+    SmartReleaseでは、このテスト環境が標準で装備しているため、追加改修などの場合、新たにサーバーを準備せずに始めることができます。</p>
+    <h3>テストから公開にファイル転送機能</h3>
+    <p>テスト環境から、公開環境にファイルを転送する場合、ひと昔前まではFTPでテスト環境からファイルをダウンロードし、公開環境にアップロードしていました。<br>
+    昨今ではバージョン管理システム(Gitなど)を使いアップロードすることもあります。<br>
+    手動でのファイルアップロードは間違えのもとですし、Gitはデザイナーやディレクターには少し敷居の高いツールです。</p>
+    <p>SmartReleaseは、テスト環境で追加改修したファイルやデータベースをコントロールパネルからボタン１つで転送することができます。</p>
+    <h3>自動バックアップ機能（ウェブ、データベース）</h3>
+    <p>万が一のために、バックアップの重要性は皆さんご存知かと思います。<br>
+    しかし、定期的なバックアップの取得や、バックアップの世代管理は面倒です。</p>
+    <p>SmartReleaseでは、ウェブとデータベースそれぞれ自動でバックアップが取得されており、万が一の時にボタン１つで過去の状態に戻すことができます。</p>
+    <p>&nbsp;</p>
+    <h2><a id="stg" name="stg"></a>テスト環境にWordPressをインストール</h2>
+    <p>それではSmartRelease環境にWordPressを導入していきます。<br>
+    テスト環境へのインストールは、CPIが用意している簡単インストーラーを利用します。</p>
+    <ol>
+    <li><a href="https://login.secure.ne.jp" target="_blank">ユーザーポータル</a>にログインし、ウェブコントロールパネルを開きます。</li>
+    <li>ウェブコントロールパネルの「テストサイト用設定 &gt; ソフトライブラリ」と進みます。<br>
+        <img alt="" class="img-responsive" src="/.assets/test-library.png" style="border-width: 1px; border-style: solid;"><br>
+        &nbsp;</li>
+    <li>あとは、流れにそってテスト環境にWordPressをインストールします。
+    <p>	インストール手順書はCPIのオンラインヘルプを参照ください。「<a href="http://acesr.document.secure.ne.jp/library/cms/wordpress/" target="_blank">WordPressのインストール</a>」</p></li>
+    </ol>
+    <p>&nbsp;</p>
+    <p>テスト環境にWordPressをインストールすることができましたので、この環境で開発作業を進めます。</p>
+    <p>&nbsp;</p>
+    <h2><a id="prod" name="prod"></a>公開環境にWordPressをインストール</h2>
+    <p>&nbsp;</p>
+    <p>開発環境でWordPressの構築が終わったら、WordPressを公開環境にリリースします。<br>
+    公開環境へのリリースは、今後のサイト運用を考え、テスト環境と公開環境でデータベースを分ける設定とします。<br>
+    まずは一旦、公開環境にWordPressをインストールします。</p>
+    <ol>
+    <li><a href="https://login.secure.ne.jp" target="_blank">ユーザーポータル</a>&nbsp;にログインし、ウェブコントロールパネルを開きます。</li>
+    <li>ウェブコントロールパネルの「公開サイト用設定 &gt; ソフトライブラリ」と進みます。<br>
+        <img alt="" class="img-responsive" src="/.assets/prod-library.png" style="border-width: 1px; border-style: solid;"></li>
+    <li>
+    <p>あとは、流れにそってテスト環境にWordPressをインストールします。</p>
+    <p>	手順書はCPIのオンラインヘルプを参照ください。「<a href="http://acesr.document.secure.ne.jp/library/cms/wordpress/" target="_blank">WordPressのインストール</a>」</p>
+    </li>
+    </ol>
+    <p>公開環境にWordPressのインストールが完了いたしました。</p>
+    <p>&nbsp;</p>
+    <h2><a id="wp-config" name="wp-config"></a>設定ファイル（wp-config.php）の調整</h2>
+    <p>&nbsp;</p>
+    <p>テスト環境と、公開環境のデータベースをコピーして運用しますが、テスト環境にはテスト環境用のURLがありますし、公開環境には公開環境用のURLがあります。</p>
+    <p>WordPressがそれぞれの環境で誤動作を行わないように下記の設定を行います。</p>
+    <ol>
+    <li>WordPressをインストールした直下の「wp-config.php」を編集します。</li>
+    <li>下記のコードを追加
+    <p>	テスト環境（テスト環境のURLを指定）</p>
+    <pre class="prettyprint linenums prettyprinted" style="width: 600px;"><ol class="linenums"><li class="L0"><span class="pln">define</span><span class="pun">(</span><span class="str">'WP_HOME'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'http://USER_ID.smartrelease.jp/'</span><span class="pun">);</span></li><li class="L1"><span class="pln">define</span><span class="pun">(</span><span class="str">'WP_SITEURL'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'http://USER_ID.smartrelease.jp/'</span><span class="pun">);</span></li></ol></pre><p>	公開環境（公開環境のURLを指定）</p>
+    <pre class="prettyprint linenums prettyprinted" style="width: 600px;"><ol class="linenums"><li class="L0"><span class="pln">define</span><span class="pun">(</span><span class="str">'WP_HOME'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'https://example.com/'</span><span class="pun">);</span></li><li class="L1"><span class="pln">define</span><span class="pun">(</span><span class="str">'WP_SITEURL'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'https://example.com/'</span><span class="pun">);</span></li></ol></pre></li>
+    </ol>
+    <h3>SmartReleaseでwp-configファイルの同期を除外設定</h3>
+    <p>上記で作成したWordPressの設定ファイルが、テスト環境と公開環境で同期しないように除外設定をします。</p>
+    <ol>
+    <li>SmartReleaseのコントールパネルにログインし、「リリース、ファイル転送」の除外設定に、「wp-config.php」ファイルを追加します。<br>
+        <img alt="" class="img-responsive" src="/.assets/sr-ignore-wpconfig.png" style="border-width: 1px; border-style: solid;"></li>
+    </ol>
+    <p>&nbsp;</p>
+    <p>以上で、環境の準備が整いました。</p>
+    <p>&nbsp;</p>
+    <h2><a id="release" name="release"></a>WordPressを公開環境へ移行</h2>
+    <p>&nbsp;</p>
+    <h3>プラグインインストール</h3>
+    <p>WordPressのリリース作業後にURLの書き換えが必要です。URL書き換え用にプラグイン「Search &amp; Replace」をインストールしておきます。</p>
+    <ol>
+    <li><span style="background-color:Yellow;">テスト環境の</span>WordPress管理画面より「プラグイン &gt; 新規追加」から「Search &amp; Replace」を追加し、「有効化」します。<br>
+        <img alt="" class="img-responsive" src="/.assets/sr-wp-plugin.png" style="border-width: 1px; border-style: solid;"></li>
+    </ol>
+    <h3>
+    ファイル転送</h3>
+    <p>続いて、開発環境に設置したWordPressを公開環境に移行します。</p>
+    <ol>
+    <li>SmartReleaseコントールパネルから「リリース &gt; すべてリリース」から、ファイルを全て、公開環境に置き換えます。<br>
+        <span style="background-color:Yellow;">（注意）「すべてリリース」を行うと、公開環境にだけに設置したファイルが消えますのでご注意ください。</span><br>
+        <img alt="" class="img-responsive" src="/.assets/all-release2.png" style="border-width: 1px; border-style: solid;"></li>
+    </ol>
+    <p>&nbsp;</p>
+    <h3>データベースのコピー</h3>
+    <p>次にデータベースをコピーします。</p>
+    <ol>
+    <li>SmartReleaseのコントロールパネルから「バックアップ &gt; お使いのデータベース &gt; バックアップ」をクリックし、データベースのバックアップを取得します。<br>
+        <img alt="" class="img-responsive" src="/.assets/sr-db-backup2.png" style="border-width: 1px; border-style: solid;"><br>
+        &nbsp;</li>
+    <li>しばらくすると「手動」バックアップが表示されるので「リストア」をクリックします。<br>
+        <img alt="" class="img-responsive" src="/.assets/sr-db-restore.png" style="border-width: 1px; border-style: solid;"><br>
+        &nbsp;</li>
+    <li>上部の選択欄からテスト環境のデータベースファイルを選択し、下部の選択欄に公開環境のデータベースを選択し、リストアをクリックします。<br>
+        <img alt="" class="img-responsive" src="/.assets/sr-db-restore4.png" style="border-width: 1px; border-style: solid;"></li>
+    </ol>
+    <p>&nbsp;</p>
+    <p>しばらくすると、テスト環境のデータベースが、公開環境にコピーされます。</p>
+    <p>&nbsp;</p>
+    <h3>データベース情報の書き換え</h3>
+    <p>データーベースがコピーされましたが、公開環境のデータベースにテスト環境のURLもコピーされました。<br>
+    このままですとWordPressが誤動作を起こすので、テスト環境のURLを全て、公開環境のURLに書き換えます。</p>
+    <ol>
+    <li><span style="background-color:Yellow;">公開環境</span>のWordPress管理画面にログインし、Search &amp; Replaceプラグインにアクセスし、Search &amp; Replaceタブを開きます。<br>
+        下記の通り設定を行い「Do &amp; Search Replace」をクリックします。<br>
+        Search for ： テスト環境のURLを入力<br>
+        Replace with ： 公開環境のURLを入力<br>
+        <img alt="" class="img-responsive" src="/.assets/sAndR2.png" style="border-width: 1px; border-style: solid;"><br>
+        &nbsp;</li>
+    </ol>
+    <p>以上で、テスト環境のURLが書き換わり移行が完了しました。</p>
+    <p>&nbsp;</p>
+    <h2><a id="use" name="use"></a>サイト運用が始まったら</h2>
+    <p>&nbsp;</p>
+    <p>サイト運用が始まり、テストで開発したものを公開にあげる場合、上記手順の作業中に、サイト表示が不安定になります。<br>
+    （ファイルコピー後に、データベースをコピーしているため）</p>
+    <p>ファイルとデータベースをコピーしている間の15分程度ですが、サイト表示が不安定になりますので、メンテナンス中画面を出すと良いでしょう。<br>
+    メンテナンス画面を表示するには、プラグインを使い表示します。</p>
+    <p>メンテナンスモードプラグインは「Maintenance Mode」で検索をすると、プラグインが沢山でてきます。<br>
+    インストール数や、星の数を参考にプラグインを選定すると良いでしょう。</p>
+    <p><img alt="" class="img-responsive" src="/.assets/MaintenanceMode.png" style="border-width: 1px; border-style: solid;"></p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <h2><a id="comment" name="comment"></a>さいごに</h2>
+    <p>&nbsp;</p>
+    <p>WordPressのアップデートは、デフォルトではコアのマイナーアップデート及び、翻訳ファイルが自動で実施されます。<br>
+    （<a href="https://wpdocs.osdn.jp/%E8%87%AA%E5%8B%95%E3%83%90%E3%83%83%E3%82%AF%E3%82%B0%E3%83%A9%E3%82%A6%E3%83%B3%E3%83%89%E6%9B%B4%E6%96%B0%E3%81%AE%E8%A8%AD%E5%AE%9A#p-lang" target="_blank">WordPress Codex</a>の情報より）</p>
+    <p>コアのメジャーアップデートは自動で実施されませんので、安全のために一旦テスト環境でアップデートしてから、公開環境で適用することをオススメします。</p>
+    <p>CPIのACE01は、標準でテスト環境と、公開環境が使えるのでWordPressを運用するサーバーとして最適だと考えています。</p>
+    <p>&nbsp;</p>
+    </div></div>
